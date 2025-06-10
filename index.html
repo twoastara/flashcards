@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Polish Flashcards</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="mode-switcher">
+    <button onclick="setTheme('default')">Default</button>
+    <button onclick="setTheme('dark')">Dark Mode</button>
+    <button onclick="setTheme('butterfly')">Butterfly Mode</button>
+  </div>
+
+  <div class="flashcard-container">
+    <div id="sun"></div>
+    <div class="card">
+      <h2 id="card-front">...</h2>
+      <p id="card-back" class="hidden">...</p>
+      <button onclick="showAnswer()">Show Answer</button>
+      <div class="actions">
+        <button onclick="markKnown()">Znam</button>
+        <button onclick="markUnknown()">Nie znam</button>
+      </div>
+      <div id="score">Known: 0 / 0</div>
+    </div>
+    <div id="complete" class="hidden">🎉 All done! Great job!</div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
