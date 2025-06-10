@@ -1,0 +1,80 @@
+body {
+  font-family: sans-serif;
+  text-align: center;
+  margin: 0;
+  padding: 0;
+  transition: background 0.4s ease;
+}
+
+.flashcard-container {
+  padding: 2rem;
+  position: relative;
+  min-height: 100vh;
+}
+
+.card {
+  background: white;
+  border-radius: 1rem;
+  padding: 2rem;
+  margin: 2rem auto;
+  max-width: 400px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.actions button,
+.mode-switcher button {
+  padding: 10px 20px;
+  margin: 10px;
+  border-radius: 10px;
+  border: none;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+#card-back.hidden {
+  visibility: hidden;
+}
+
+#sun {
+  width: 60px;
+  height: 60px;
+  background: yellow;
+  border-radius: 50%;
+  margin: auto;
+}
+
+/* THEMES */
+body.default {
+  background: #f0f0f0;
+  color: #333;
+}
+
+body.dark {
+  background: #121212;
+  color: #eee;
+}
+
+body.dark .card {
+  background: #333;
+  color: white;
+}
+
+body.butterfly {
+  background-image: url("images/Butterfly1.png");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  color: #222;
+}
+
+body.butterfly .card {
+  background: rgba(255, 255, 255, 0.8);
+  color: #222;
+  border: 2px solid #8ecae6;
+}
+
+#complete {
+  font-size: 1.5rem;
+  color: green;
+  margin-top: 2rem;
+}
