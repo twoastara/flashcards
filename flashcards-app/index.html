@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Polish Flashcards</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      text-align: center;
+      margin: 0;
+      padding: 0;
+      transition: all 0.4s ease;
+    }
+
+    .container {
+      padding-top: 50px;
+    }
+
+    #card, #languageSelect, #themeSelect {
+      font-size: 24px;
+      margin-bottom: 20px;
+    }
+
+    button {
+      padding: 10px 20px;
+      font-size: 18px;
+      margin: 5px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    /* Dark Mode */
+    body.dark {
+      background-color: #121212;
+      color: #ffffff;
+    }
+
+    body.dark button {
+      background-color: #333;
+      color: #fff;
+    }
+
+    /* Butterfly Mode */
+    body.butterfly {
+      background: linear-gradient(to top, #c3f5ff 0%, #ffffff 100%);
+      color: #333;
+      background-image: url('https://images.unsplash.com/photo-1526045478516-99145907023c?auto=format&fit=crop&w=1200&q=80');
+      background-size: cover;
+      background-position: bottom;
+      background-repeat: no-repeat;
+    }
+
+    body.butterfly #card {
+      background: rgba(255, 255, 255, 0.6);
+      padding: 20px;
+      border-radius: 20px;
+      display: inline-block;
+    }
+
+    body.butterfly button {
+      background-color: #ffddf4;
+      color: #333;
+      border: 2px solid #ffaadd;
+    }
+
+    .sun {
+      width: 80px;
+      height: 80px;
+      background: yellow;
+      border-radius: 50%;
+      margin: 0 auto 20px;
+      box-shadow: 0 0 30px yellow;
+    }
+
+    #scoreboard {
+      margin-top: 20px;
+      font-size: 18px;
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <div id="languageSelect">
+    <p>Select a language:</p>
+    <button onclick="selectLanguage('en')">English</button>
+    <button onclick="selectLanguage('es')">Spanish</button>
+    <button onclick="selectLanguage('va')">Valencian</button>
+  </div>
+
+  <div id="themeSelect" style="display:none;">
+    <p>Select a theme:</p>
+    <button onclick="startApp('dark')">Dark Mode</button>
+    <button onclick="startApp('butterfly')">Butterfly Mode</button>
+  </div>
+
+  <div id="flashcardApp" style="display:none;">
+    <div class="sun" id="sun" style="display:none;"></div>
+    <div id="card"></div>
+    <div>
+      <button onclick="showAnswer()">Show Answer</button><br>
+      <button onclick="markKnown()">Znam</button>
+      <button onclick="markUnknown()">Nie znam</button>
+    </div>
+    <div id="scoreboard">Known: 0 / 0</div>
+  </div>
+
+</div>
+
+<script>
+  const flashcardsData = [
+    { pl: "Tak", en: "Yes", es: "Sí", va: "Sí" },
+    { pl: "Nie", en: "No", es: "No", va: "No" },
+    { pl: "Proszę", en: "Please", es: "Por favor", va: "Per favor" },
+    { pl: "Dziękuję", en: "Thank you", es: "Gracias", va: "Gràcies" },
+    { pl: "Przepraszam", en: "Sorry / Excuse me", es: "Perdón / Lo siento", va: "Perdó / Ho sent" },
+    { pl: "Pomocy!", en: "Help!", es: "¡Ayuda!", va: "Ajuda!" },
+    { pl: "Jestem Mar, miło mi", en: "I am Mar, nice to meet you", es: "Soy Mar, mucho gusto", va: "Sóc Mar, molt de gust" },
+    { pl: "Mam na imię Mar", en: "My name is Mar", es: "Me llamo Mar", va: "Em dic Mar" },
+    { pl: "Jak masz na imię?", en: "What’s your name?", es: "¿Cómo te llamas?", va: "Com et dius?" },
+    { pl: "Cześć", en: "Hi / Hello", es: "Hola", va: "Hola" },
+    { pl: "Do widzenia", en: "Goodbye", es: "Adiós", va: "Adéu" },
+    { pl: "Dlaczego?", en: "Why?", es: "¿Por qué?", va: "Per què?" },
+    { pl: "Gdzie?", en: "Where?", es: "¿Dónde?", va: "On?" },
+    { pl: "Jak?", en: "How?", es: "¿Cómo?", va: "Com?" },
+    { pl: "Kocham cię", en: "I love you", es: "Te quiero / Te amo", va: "T’estime / T’estimo" }
+  ];
+
+  let language = "en";
+  let currentDeck = [];
+  let currentIndex = 0;
+  let showingAnswer = false;
+  let knownCount = 0;
+  let totalCount = 0;
+
+  function selectLanguage(lang) {
+    language = lang;
+    document.getElementById("languageSelect").style.display = "none";
+    document.getElementById("themeSelect").style.display = "block";
+  }
+
+  function startApp(theme) {
+    document.body.className = theme;
+    if (theme === 'butterfly') {
+      document.getElementById("sun").style.display = "block";
+    }
+    currentDeck = [...flashcardsData];
+    totalCount = currentDeck.length;
+    knownCount = 0;
+    currentIndex = 0;
+    showingAnswer = false;
+    document.getElementById("themeSelect").style.display = "none";
+    document.getElementById("flashcardApp").style.display = "block";
+    showCard();
+    updateScore();
+  }
+
+  function showCard() {
+    if (currentDeck.length === 0) {
+      document.getElementById("card").textContent = "🎉 All done! Great job!";
+      document.getElementById("scoreboard").textContent = `Known: ${knownCount} / ${totalCount}`;
+      return;
+    }
+    const card = currentDeck[currentIndex];
+    document.getElementById("card").textContent = card.pl;
+    showingAnswer = false;
+  }
+
+  function showAnswer() {
+    if (currentDeck.length === 0) return;
+    const card = currentDeck[currentIndex];
+    document.getElementById("card").textContent = card[language];
+    showingAnswer = true;
+  }
+
+  function markKnown() {
+    if (currentDeck.length === 0) return;
+    currentDeck.splice(currentIndex, 1);
+    knownCount++;
+    if (currentIndex >= currentDeck.length) currentIndex = 0;
+    showCard();
+    updateScore();
+  }
+
+  function markUnknown() {
+    if (currentDeck.length === 0) return;
+    const card = currentDeck.splice(currentIndex, 1)[0];
+    currentDeck.push(card);
+    if (currentIndex >= currentDeck.length) currentIndex = 0;
+    showCard();
+    updateScore();
+  }
+
+  function updateScore() {
+    document.getElementById("scoreboard").textContent = `Known: ${knownCount} / ${totalCount}`;
+  }
+</script>
+
+</body>
+</html>
